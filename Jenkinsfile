@@ -15,16 +15,18 @@ pipeline {
         }
 
         stage('Run Backend Containers') {
-            steps {
-                sh '''
-                docker rm -f backend1 backend2 || true
-                docker run -d --name backend1 --network lab-net backend-app
-                docker run -d --name backend2 --network lab-net backend-app
-                sleep 5
-                docker ps
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker rm -f backend1 || true
+        docker rm -f backend2 || true
+        sleep 2
+        docker run -d --name backend1 --network lab-net backend-app
+        docker run -d --name backend2 --network lab-net backend-app
+        sleep 5
+        docker ps
+        '''
+    }
+}
 
         stage('Run NGINX Load Balancer') {
     steps {
