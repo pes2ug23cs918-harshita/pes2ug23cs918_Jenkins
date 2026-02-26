@@ -27,15 +27,14 @@ pipeline {
         }
 
         stage('Run NGINX Load Balancer') {
-            steps {
-                sh '''
-                docker rm -f nginx-lb || true
-                docker run -d -p 80:80 --name nginx-lb \
-                  --network lab-net \
-                  -v $(pwd)/nginx/default.conf:/etc/nginx/conf.d/default.conf \
-                  nginx:latest
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker rm -f nginx-lb || true
+        docker run -d -p 80:80 --name nginx-lb --network lab-net nginx:latest
+        docker cp nginx/default.conf nginx-lb:/etc/nginx/conf.d/default.conf
+        docker restart nginx-lb
+        '''
+    }
+}
     }
 }
